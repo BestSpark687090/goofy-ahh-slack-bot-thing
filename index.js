@@ -41,12 +41,12 @@ app.command("/goofyahhbot-ismysiteup", async ({ command, ack, respond }) => {
         });
     }
 });
-app.command("/goofyahhbot-no", async function ({ command, ack, respond }) {
+app.command("/goofyahhbot-no", async function ({ command, ack, respond, say }) {
     await ack();
     try {
         let res = await fetch("https://naas.isalman.dev/no");
         let json = await res.json();
-        await respond({ text: json.reason });
+        await say({ text: json.reason });
     } catch (e) {
         await respond({
             text: `couldn't even fetch a no for you. sad.
@@ -64,32 +64,35 @@ app.command(
 function getRandomInt(max) {
     return Math.floor(Math.random() * max);
 }
-app.command("/goofyahhbot-yes", async function ({ command, ack, respond }) {
-    await ack();
-    switch (command.text) {
-        case "":
-            await respond({
-                text: yes_normal[getRandomInt(yes_normal.length)],
-            });
-            break;
-        case "corporate":
-            await respond({ text: yes_corp[getRandomInt(yes_corp.length)] });
-            break;
-        case "funny":
-            await respond({ text: yes_funny[getRandomInt(yes_corp.length)] });
-            break;
-        case "sarcastic":
-            await respond({
-                text: yes_sarcastic[getRandomInt(yes_sarcastic.length)],
-            });
-            break;
-        default:
-            await respond({
-                text: `${command.text} isn't a valid type.
+app.command(
+    "/goofyahhbot-yes",
+    async function ({ command, ack, say, respond }) {
+        await ack();
+        switch (command.text) {
+            case "":
+                await say({
+                    text: yes_normal[getRandomInt(yes_normal.length)],
+                });
+                break;
+            case "corporate":
+                await say({ text: yes_corp[getRandomInt(yes_corp.length)] });
+                break;
+            case "funny":
+                await say({ text: yes_funny[getRandomInt(yes_corp.length)] });
+                break;
+            case "sarcastic":
+                await say({
+                    text: yes_sarcastic[getRandomInt(yes_sarcastic.length)],
+                });
+                break;
+            default:
+                await respond({
+                    text: `${command.text} isn't a valid type.
 Try nothing, \`corporate\`, \`funny\`, or \`sarcastic\` for options.`,
-            });
-    }
-});
+                });
+        }
+    },
+);
 // this is the reason why i need a semicolon at the end
 (async () => {
     await app.start();
